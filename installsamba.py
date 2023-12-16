@@ -80,7 +80,7 @@ def obtener_ip(interfaz):
     return servidores_ad
 """     
 
-paquetes = ["samba", "smbclient", "winbind", "krb5-user", "krb5-config", "realmd", "libpam-winbind", "libnss-winbind"]
+paquetes = ["samba", "smbclient", "winbind", "krb5-kdc", "krb5-user", "krb5-config", "realmd", "libpam-winbind", "libnss-winbind"]
 pkg_ready(paquetes)
 
 netbios = sys.argv[1]
