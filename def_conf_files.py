@@ -51,19 +51,32 @@ iface {interfaz} inet static
     dns-nameservers 192.168.100.3
     dns-search {dominio}
 """
-        encontrado = False
+
+        eliminado_dhcp = False
         with open(destino, 'r') as file:
             lines = file.readlines()
 
         with open(destino, 'w') as file:
             for line in lines:
-                if interfaz in line and not encontrado:
-                    file.write(configuracion_nueva)
-                    encontrado = True
-                else:
-                    file.write(line)
+                # Elimina la línea que contiene "dhcp" específicamente para la interfaz especificada
+                if "dhcp" in line.lower() and interfaz in line:
+                    eliminado_dhcp = True
+                    continue
+                file.write(line)
+
+            if not eliminado_dhcp:
+                # Si no se encontró y eliminó la configuración DHCP, agrega la nueva configuración
+                file.write(configuracion_nueva)
     except Exception as e:
         print(f"Error en el paso de /etc/network/interfaces: {e}")
+
+# Llamada a la función
+dominio = "prueba.com"
+ruta_archivo = "/etc/network/interfaces"
+interfaz = "enp0s3"
+ip_host = "192.168.100.2"
+static_ip(dominio, ruta_archivo, interfaz, ip_host)
+
 
 def samba_file(netbios, dominio, destino, default):
     try:
