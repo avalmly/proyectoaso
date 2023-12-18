@@ -6,7 +6,6 @@
 #               necesarios para hacer una conexión a un dominio usando samba
 #------------------------------------------------------------------------------------------
 import subprocess
-import re
 
 def hosts_file(netbios, dominio, ip_host, destino):
     try:
@@ -39,43 +38,6 @@ def resolv_file(dominio, destino):
             escribe_resolv.write(f"domain {dominio}\nsearch {dominio}\nnameserver 192.168.100.3\n")
     except Exception as e:
         print(f"Error en el paso de /etc/resolv.conf: {e}")        
-
-def static_ip(dominio, destino, interfaz, ip_host):
-    try:
-        configuracion_nueva = f"""
-auto {interfaz}
-iface {interfaz} inet static
-    address {ip_host}
-    netmask 255.255.255.0
-    gateway 192.168.100.1
-    dns-nameservers 192.168.100.3
-    dns-search {dominio}
-"""
-
-        eliminado_dhcp = False
-        encontrada_configuracion = False
-        with open(destino, 'r') as lee_interfaces:
-            lineas = lee_interfaces.readlines()
-
-        with open(destino, 'w') as escribe_interfaces:
-            for linea in lineas:
-                # Elimina la línea que contiene "dhcp" específicamente para la interfaz especificada
-                if "dhcp" in linea.lower() and interfaz in linea:
-                    eliminado_dhcp = True
-                    continue
-
-                # Verifica si ya hay una configuración similar
-                if interfaz in linea and "inet static" in linea:
-                    encontrada_configuracion = True
-                    break
-
-                escribe_interfaces.write(linea)
-
-            if not eliminado_dhcp and not encontrada_configuracion:
-                # Si no se encontró y eliminó la configuración DHCP, y no se encontró una configuración similar, agrega la nueva configuración
-                escribe_interfaces.write(configuracion_nueva)
-    except Exception as e:
-        print(f"Error en el paso de /etc/network/interfaces: {e}")
 
 def samba_file(netbios, dominio, destino, default):
     try:
