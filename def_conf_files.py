@@ -35,7 +35,7 @@ def hosts_file(netbios, dominio, ip_host, destino):
 def resolv_file(dominio, destino):   
     try:
         with open(destino, "w") as escribe_resolv:
-            escribe_resolv.write(f"domain {dominio}\nsearch {dominio}\nnameserver 192.168.100.3\n")
+            escribe_resolv.write(f"domain {dominio}\nsearch {dominio}\nnameserver 192.168.100.5\n")
     except Exception as e:
         print(f"Error en el paso de /etc/resolv.conf: {e}")        
 
