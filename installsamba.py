@@ -54,7 +54,7 @@ dominio = sys.argv[2]
 usuario = sys.argv[3]
 password = sys.argv[4]
 
-rutas_conf = ["/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/sbin/sambazings/smb-default.conf", "/etc/krb5.conf", "/sbin/sambazings/krb5-default.conf", "/etc/nsswitch.conf"]
+rutas_conf = ["/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/sbin/smb-default.conf", "/etc/krb5.conf", "/sbin/krb5-default.conf", "/etc/nsswitch.conf"]
 ip_host = obtener_ip("enp0s3")
 
 # Configuración de ficheros
