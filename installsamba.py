@@ -15,7 +15,7 @@ import os
 import sys
 import subprocess
 import re                 # Para usar expresiones regulares
-from def_conf_files import hosts_file, resolv_file, krb5_file, samba_file, static_ip
+from def_conf_files import hosts_file, resolv_file, krb5_file, samba_file
 
 
 def pkg_ready(paquetes):
@@ -53,7 +53,6 @@ ip_host = obtener_ip(interfaz)
 # Configuración de ficheros
 hosts_file(netbios, dominio, ip_host, rutas_conf[0])
 resolv_file(dominio, rutas_conf[1])
-static_ip(dominio, rutas_conf[6], interfaz, ip_host)
 samba_file(netbios, dominio, rutas_conf[2], rutas_conf[3])
 krb5_file(netbios, dominio, rutas_conf[4], rutas_conf[5])
 
