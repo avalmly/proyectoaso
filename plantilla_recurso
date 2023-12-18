@@ -1,0 +1,3 @@
+[recurso]
+path = ruta
+valid users = @grupo

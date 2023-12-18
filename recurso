@@ -1,0 +1,41 @@
+#!/bin/bash
+#------------------------------------------------------------------------------------------
+# Autor: Alberto Valero Mlynaricova
+# Fecha: 16/12/2023
+#
+# Descripción: Script que instala PowerShell y ejecuta un programa en Python para crear recursos.
+#               USO: sudo recurso nombre_recurso grupo
+#                    programa    nombre recurso      nombre grupo del dominio
+#------------------------------------------------------------------------------------------
+
+# Verifica el número de argumentos
+if [ $# -ne 2 ]; then
+    echo "Faltan argumentos... Uso: sudo recurso nombre_recurso grupo"
+    exit 1
+fi
+
+# Añade el directorio de sbin al PATH si no está presente
+if [[ ":$PATH:" != *":/sbin:"* ]]; then
+    export PATH=$PATH:/sbin
+fi
+
+# Actualiza el sistema
+apt -y update > /dev/null || { echo "Error al actualizar el sistema"; exit 1; }
+
+# Instala dependencias
+apt -y install ssh sshpass wget > /dev/null || { echo "Error al instalar dependencias"; exit 1; }
+
+# Descarga el paquete de PowerShell desde GitHub
+wget https://github.com/PowerShell/PowerShell/releases/download/v7.4.0/powershell_7.4.0-1.deb_amd64.deb
+
+# Instala el paquete de PowerShell
+sudo dpkg -i powershell_7.4.0-1.deb_amd64.deb || { echo "Error al instalar PowerShell"; exit 1; }
+
+# Instala las dependencias restantes (en caso de alguna dependencia faltante)
+sudo apt-get install -f || { echo "Error al instalar dependencias restantes"; exit 1; }
+
+# Elimina el paquete DEB descargado para limpiar
+rm powershell_7.4.0-1.deb_amd64.deb
+
+# Ejecuta el script de Python
+python3 /sbin/sambazings/nuevo_recurso.py $1 $2
