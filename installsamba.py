@@ -15,7 +15,7 @@ import os
 import sys
 import subprocess
 import re                 # Para usar expresiones regulares
-from def_conf_files import hosts_file, resolv_file, krb5_file, samba_file
+from def_conf_files import hosts_file, resolv_file, krb5_file, samba_file, static_ip
 
 
 def pkg_ready(paquetes):
@@ -38,7 +38,7 @@ def obtener_ip(interfaz):
         print(f"No se pudo obtener la IP de la interfaz {interfaz}. Error: {e}")
         return None
 
-paquetes = ["samba", "smbclient", "winbind", "krb5-config", "krb5-kdc", "krb5-user", "realmd", "libpam-winbind", "libnss-winbind"]
+paquetes = ["samba", "smbclient", "krb5-config", "krb5-kdc", "krb5-user", "winbind", "realmd", "libnss-winbind", "libpam-winbind"]
 pkg_ready(paquetes)
 
 netbios = sys.argv[1]
@@ -46,12 +46,14 @@ dominio = sys.argv[2]
 usuario = sys.argv[3]
 password = sys.argv[4]
 
-rutas_conf = ["/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/sbin/smb-default.conf", "/etc/krb5.conf", "/sbin/krb5-default.conf", "/etc/nsswitch.conf"]
-ip_host = obtener_ip("enp0s3")
+rutas_conf = ["/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/sbin/smb-default.conf", "/etc/krb5.conf", "/sbin/krb5-default.conf", "/etc/network/interfaces"]
+interfaz = "enp0s3"
+ip_host = obtener_ip(interfaz)
 
 # Configuración de ficheros
 hosts_file(netbios, dominio, ip_host, rutas_conf[0])
 resolv_file(dominio, rutas_conf[1])
+static_ip(dominio, rutas_conf[6], interfaz, ip_host)
 samba_file(netbios, dominio, rutas_conf[2], rutas_conf[3])
 krb5_file(netbios, dominio, rutas_conf[4], rutas_conf[5])
 
