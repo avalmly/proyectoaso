@@ -6,6 +6,7 @@
 #               necesarios para hacer una conexión a un dominio usando samba
 #------------------------------------------------------------------------------------------
 import subprocess
+import re
 
 def hosts_file(netbios, dominio, ip_host, destino):
     try:
@@ -38,6 +39,29 @@ def resolv_file(dominio, destino):
             escribe_resolv.write(f"domain {dominio}\nsearch {dominio}\nnameserver 192.168.100.3\n")
     except Exception as e:
         print(f"Error en el paso de /etc/resolv.conf: {e}")        
+
+def static_ip(dominio, destino, interfaz, ip_host):
+    try:
+        configuracion_nueva = """
+        auto {interfaz}
+        iface {interfaz} inet static
+            address {ip_host}
+            netmask 255.255.255.0
+            gateway 192.168.100.1
+            dns-nameservers 192.168.100.3
+            dns-search {dominio}
+        """
+        with open(destino, 'r') as file:
+            lines = file.readlines()
+
+        with open(destino, 'w') as file:
+            for line in lines:
+                if interfaz in line:
+                    file.write(configuracion_nueva)
+                else:
+                    file.write(line)
+    except Exception as e:
+        print("Error en el paso de /etc/network/interfaces: {e}")
 
 def samba_file(netbios, dominio, destino, default):
     try:
