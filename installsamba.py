@@ -15,9 +15,6 @@ import os
 import sys
 import subprocess
 import re                 # Para usar expresiones regulares
-#import netifaces
-import importlib_metadata # Paquete setuptools
-#import winrm   # Paquete: pywinrm
 from def_conf_files import hosts_file, resolv_file, krb5_file, samba_file
 
 
@@ -30,7 +27,6 @@ def pkg_ready(paquetes):
         # Si no se encuentra ninguna coincidencia, instalar el paquete
         if not resultado.stdout.strip():
             print(f"Instalando {paquete}...")
-            #subprocess.run(f"apt install -qq {paquete} > /dev/null", shell=True) # La opción -qq a parte de forzar el sí hace que sea más silencioso con el output
             subprocess.run(f"apt install -y {paquete}", shell=True) # La opción -qq a parte de forzar el sí hace que sea más silencioso con el output
 
         else:
@@ -50,36 +46,6 @@ def obtener_ip(interfaz):
         print(f"No se pudo obtener la IP de la interfaz {interfaz}. Error: {e}")
         return None
 
-"""def info_ad(ip_host): #Obtenemos info del directorio activo con nslookup srv o algo asi para sacar la IP, nombre
-    servidores_ad = []
-
-    if ip_host:
-        # Bucle para buscar servidores en la red
-        red = ".".join(ip_host.split('.')[:3])
-        rango_inicio = 1
-        rango_fin = 254
-        for i in range(rango_inicio, rango_fin + 1):
-            ip = f"{red}.{i}"
-            try:
-                resultado = subprocess.run(["nslookup", ip], capture_output=True, text=True)
-                salida = resultado.stdout
-
-                # Buscar la información del servidor DNS en la salida de nslookup
-                match_ip = re.search(r"Address:\s+(\S+)", salida)
-                match_hostname = re.search(r"Name:\s+(\S+)", salida)
-
-                if match_ip and match_hostname:
-                    ip_servidor = match_ip.group(1)
-                    hostname_servidor = match_hostname.group(1)
-                    servidores_ad.append({'hostname': hostname_servidor, 'ip': ip_servidor})
-                    break               # Termina de buscar una
-
-            except Exception as e:
-                print(f"Error al ejecutar nslookup para {ip}: {e}")
-
-    return servidores_ad
-"""     
-
 paquetes = ["samba", "smbclient", "winbind", "krb5-kdc", "krb5-user", "krb5-config", "realmd", "libpam-winbind", "libnss-winbind"]
 pkg_ready(paquetes)
 
@@ -88,7 +54,7 @@ dominio = sys.argv[2]
 usuario = sys.argv[3]
 password = sys.argv[4]
 
-rutas_conf = ["/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "./smb-default.conf", "/etc/krb5.conf", "./krb5-default.conf", "/etc/nsswitch.conf"]
+rutas_conf = ["/etc/hosts", "/etc/resolv.conf", "/etc/samba/smb.conf", "/sbin/sambazings/smb-default.conf", "/etc/krb5.conf", "/sbin/sambazings/krb5-default.conf", "/etc/nsswitch.conf"]
 ip_host = obtener_ip("enp0s3")
 
 # Configuración de ficheros
