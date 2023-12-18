@@ -15,4 +15,4 @@ fi
 apt install -y python3 python3-pip > /dev/null
 #yes | pip install --break-system-packages setuptools pywinrm netifaces > /dev/null
 
-python3 /sbin/sambazings/installsamba.py $1 $2 $3 $4
+python3 /sbin/installsamba.py $1 $2 $3 $4
