@@ -57,7 +57,7 @@ def check_grupo(host, usuario, contrasena, grupo):
 
 def crea_recurso(recurso, ruta, grupo):
     try:
-        with open("/sbin/sambazings/plantilla_recurso", 'r') as plantilla_recurso:
+        with open("/sbin/plantilla_recurso", 'r') as plantilla_recurso:
             lineas = plantilla_recurso.read()
 
         # Realizar las sustituciones
