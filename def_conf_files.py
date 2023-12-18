@@ -42,26 +42,28 @@ def resolv_file(dominio, destino):
 
 def static_ip(dominio, destino, interfaz, ip_host):
     try:
-        configuracion_nueva = """
-        auto {interfaz}
-        iface {interfaz} inet static
-            address {ip_host}
-            netmask 255.255.255.0
-            gateway 192.168.100.1
-            dns-nameservers 192.168.100.3
-            dns-search {dominio}
-        """
+        configuracion_nueva = f"""
+auto {interfaz}
+iface {interfaz} inet static
+    address {ip_host}
+    netmask 255.255.255.0
+    gateway 192.168.100.1
+    dns-nameservers 192.168.100.3
+    dns-search {dominio}
+"""
+        encontrado = False
         with open(destino, 'r') as file:
             lines = file.readlines()
 
         with open(destino, 'w') as file:
             for line in lines:
-                if interfaz in line:
+                if interfaz in line and not encontrado:
                     file.write(configuracion_nueva)
+                    encontrado = True
                 else:
                     file.write(line)
     except Exception as e:
-        print("Error en el paso de /etc/network/interfaces: {e}")
+        print(f"Error en el paso de /etc/network/interfaces: {e}")
 
 def samba_file(netbios, dominio, destino, default):
     try:
