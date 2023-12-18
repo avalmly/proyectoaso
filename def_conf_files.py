@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------------------
 # Autor: Alberto Valero Mlynaricova
-# Fecha: 16/12/2023
+# Fecha: 18/12/2023
 #
 # Descripción:  Este programa contiene las funciones relacionadas con los ficheros de configuración 
 #               necesarios para hacer una conexión a un dominio usando samba
@@ -24,9 +24,10 @@ def hosts_file(netbios, dominio, ip_host, destino):
 
         with open(destino, "w") as escribe_hosts:
             for linea in lineas_modificadas:
-                escribe_hosts.write(linea)  # Va sobreescribiendo el fichero con las líneas que tenía antes
-                if "127.0.0.1" in linea:
-                    escribe_hosts.write(f"{ip_host} {netbios}.{dominio} {netbios}\n")
+                if not "127.0.1.1" in linea:
+                    escribe_hosts.write(linea)  # Va sobreescribiendo el fichero con las líneas que tenía antes
+                    if "127.0.0.1" in linea:
+                        escribe_hosts.write(f"{ip_host} {netbios}.{dominio} {netbios}\n")
 
     except Exception as e:
         print(f"Error en el paso de /etc/hosts: {e}")     
