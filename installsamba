@@ -1,0 +1,18 @@
+#!/bin/bash
+#------------------------------------------------------------------------------------------
+# Autor: Alberto Valero Mlynaricova
+# Fecha: 16/12/2023
+#
+# Descripción:  script que instala python3 y los paquetes necesarios para que funcione el 
+#               programa installsamba.py y lo ejecuta
+#------------------------------------------------------------------------------------------
+
+if [ $# -ne 4 ]; then
+    echo "Faltan argumentos... Uso: sudo installsamba host dominio usuario contraseña"
+    exit 1
+fi
+
+apt install -y python3 python3-pip > /dev/null
+#yes | pip install --break-system-packages setuptools pywinrm netifaces > /dev/null
+
+python3 /sbin/sambazings/installsamba.py $1 $2 $3 $4
