@@ -38,4 +38,4 @@ sudo apt-get install -f || { echo "Error al instalar dependencias restantes"; ex
 rm powershell_7.4.0-1.deb_amd64.deb
 
 # Ejecuta el script de Python
-python3 /sbin/sambazings/nuevo_recurso.py $1 $2
+python3 /sbin/nuevo_recurso.py $1 $2
