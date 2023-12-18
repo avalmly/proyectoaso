@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------------------
 # Autor: Alberto Valero Mlynaricova
-# Fecha: 16/12/2023
+# Fecha: 18/12/2023
 #
 # Descripción:  script con el siguiente formato:
 #                   $ sudo installSamba host5 prueba.com administrator Departamento1!
@@ -21,17 +21,9 @@ from def_conf_files import hosts_file, resolv_file, krb5_file, samba_file
 def pkg_ready(paquetes):
     os.environ['DEBIAN_FRONTEND'] = 'noninteractive'    #Hace que el trabaje en modo no interactivo, es decir, que no pedirá confirmaciones
     for paquete in paquetes:
-        # Verificar si el paquete está instalado
-        resultado = subprocess.run(f"dpkg -l | grep {paquete}", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-        # Si no se encuentra ninguna coincidencia, instalar el paquete
-        if not resultado.stdout.strip():
-            print(f"Instalando {paquete}...")
-            subprocess.run(f"apt install -y {paquete}", shell=True) # La opción -qq a parte de forzar el sí hace que sea más silencioso con el output
-
-        else:
-            print(f"{paquete} ya está instalado.")
-
+        print(f"Instalando {paquete}...")
+        subprocess.run(f"apt install -y {paquete} > ./installsamba.log", shell=True)
+        
 def obtener_ip(interfaz):
     try:
         resultado = subprocess.run(['ip', 'a', 'show', interfaz], capture_output=True, text=True)
@@ -46,7 +38,7 @@ def obtener_ip(interfaz):
         print(f"No se pudo obtener la IP de la interfaz {interfaz}. Error: {e}")
         return None
 
-paquetes = ["samba", "smbclient", "winbind", "krb5-kdc", "krb5-user", "krb5-config", "realmd", "libpam-winbind", "libnss-winbind"]
+paquetes = ["samba", "smbclient", "winbind", "krb5-config", "krb5-kdc", "krb5-user", "realmd", "libpam-winbind", "libnss-winbind"]
 pkg_ready(paquetes)
 
 netbios = sys.argv[1]
